@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include "symbol_table.hpp"
+#include "SymbolTable.hpp"
 
 class SymbolTableStack {
 private:
