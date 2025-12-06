@@ -5,7 +5,7 @@
 
 class SymbolTableStack {
 private:
-    std::vector<std::unique_ptr<SymbolTable*>> stack;
+    std::vector<std::unique_ptr<SymbolTable>> stack;
 
 public:
     // Crea nuevo ámbito
@@ -15,7 +15,7 @@ public:
     void popScope();
 
     //Sale el ámbito y retorna la referencia a la tabla de símbolos en la cima
-    SymbolTable *popSymbolTable();
+    SymbolTable* popSymbolTable();
 
     // Insertar solo en tope
     bool insertTop(const SymbolEntry &entry);
@@ -24,10 +24,12 @@ public:
     bool insertBase(const SymbolEntry &entry) ;
 
     // Buscar solo en tope
-    SymbolEntry* lookupTop(const std::string &id);
+    // aqui puse const en la firma 
+    const SymbolEntry* lookupTop(const std::string &id);
 
     // Buscar solo en la base
-    SymbolEntry* lookupBase(const std::string &id);
+    // aqui puse const en la firma 
+    const SymbolEntry* lookupBase(const std::string &id);
 
     // Depuración
     SymbolTable* currentScope() {

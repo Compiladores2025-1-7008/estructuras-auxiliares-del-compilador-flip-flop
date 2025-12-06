@@ -9,7 +9,8 @@ enum class Category {
     CONST,
     STRUCT,
     FUNCTION,
-    PARAM
+    PARAM,
+    NOTFOUND // valor general que marca no encontrado
 };
 
 struct SymbolEntry {
