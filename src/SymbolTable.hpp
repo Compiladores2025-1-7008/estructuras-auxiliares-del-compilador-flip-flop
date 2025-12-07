@@ -45,7 +45,9 @@ public:
         auto it = table.find(id);
         return (it != table.end()) ? &it->second : nullptr;
     }
-
+    const std::unordered_map<std::string, SymbolEntry>& getEntries() const {
+        return table;
+    }
     // Para imprimir/depurar
     void print() const;
 };

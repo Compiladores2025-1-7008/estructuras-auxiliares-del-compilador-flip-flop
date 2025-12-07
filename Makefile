@@ -3,19 +3,26 @@ CXXFLAGS = -std=c++17 -Wall -I./src -I./external/googletest/googletest/include
 LDFLAGS = -pthread
 
 SRC_DIR = src
-TEST_DIR = tests
+TEST_DIR = test
 BUILD_DIR = build
 
-SRCS = $(wildcard $(SRC_DIR)/*.cpp)
-TEST_SRCS = $(wildcard $(TEST_DIR)/*.cpp)
-OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
-TEST_OBJS = $(TEST_SRCS:$(TEST_DIR)/%.cpp=$(BUILD_DIR)/%.o)
+# Dile a make dónde buscar los archivos fuente
+VPATH = $(SRC_DIR):$(TEST_DIR)
 
-GTEST_LIB = external/googletest/build/lib/libgtest.a external/googletest/build/lib/libgtest_main.a
+# Encuentra todos los archivos .cpp en ambos directorios
+# notdir para obtener solo el nombre del archivo, no la ruta
+SRCS = $(notdir $(wildcard $(SRC_DIR)/*.cpp))
+TEST_SRCS = $(notdir $(wildcard $(TEST_DIR)/*.cpp))
+
+# Convierte los nombres de archivo .cpp a .o y ponlos en el directorio de build
+OBJS = $(addprefix $(BUILD_DIR)/, $(SRCS:.cpp=.o))
+TEST_OBJS = $(addprefix $(BUILD_DIR)/, $(TEST_SRCS:.cpp=.o))
+
+GTEST_LIB = external/googletest/build/lib/libgtest_main.a external/googletest/build/lib/libgtest.a
 
 TARGET_TEST = runTests
 
-.PHONY: all test clean gtest
+.PHONY: all test clean gtest distclean
 
 all: test
 
@@ -33,18 +40,17 @@ gtest:
 	@cd external/googletest/build && cmake .. && make
 
 # -------------------------
-# Build Tests
+# Build and Run Tests
 # -------------------------
 test: $(TARGET_TEST)
 	./$(TARGET_TEST)
 
 $(TARGET_TEST): gtest $(OBJS) $(TEST_OBJS)
-	$(CXX) -o $@ $(OBJS) $(TEST_OBJS) $(GTEST_LIB) $(LDFLAGS)
+	$(CXX) $(LDFLAGS) -o $@ $(OBJS) $(TEST_OBJS) $(GTEST_LIB)
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(BUILD_DIR)/%.o: $(TEST_DIR)/%.cpp | $(BUILD_DIR)
+# --- Regla de compilación ÚNICA ---
+# VPATH se encargará de encontrar el .cpp en src/ o test/
+$(BUILD_DIR)/%.o: %.cpp | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BUILD_DIR):
@@ -54,5 +60,8 @@ $(BUILD_DIR):
 # Clean
 # -------------------------
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET_TEST) external/googletest
+	rm -rf $(BUILD_DIR) $(TARGET_TEST)
 
+# Un clean más agresivo que también borra gtest
+distclean: clean
+	rm -rf external/googletest
