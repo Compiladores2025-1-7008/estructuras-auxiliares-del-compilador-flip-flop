@@ -1,4 +1,4 @@
-#include "../src/TypeTable.hpp"
+#include "../../src/TypeTable.hpp"
 #include <gtest/gtest.h>
 
 TEST(TypeTableTest, InsertAndRetrieveBasicType) {

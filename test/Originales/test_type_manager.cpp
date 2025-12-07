@@ -1,4 +1,4 @@
-#include "../src/TypeManager.hpp"
+#include "../../src/TypeManager.hpp"
 #include <gtest/gtest.h>
 
 TEST(TypeManagerTest, MaxType) {

@@ -1,4 +1,4 @@
-#include "../src/SymbolTable.hpp"
+#include "../../src/SymbolTable.hpp"
 #include <gtest/gtest.h>
 
 TEST(SymbolTableTest, InsertAndRetrieveSymbol) {
