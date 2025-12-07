@@ -1,4 +1,5 @@
 #include "TypeTable.hpp"
+#include "SymbolTable.hpp"
 #include <stdexcept>
 #include <iostream>
 
@@ -26,10 +27,17 @@ int TypeTable::addArrayType(int baseTypeId, int elements) {
 
 int TypeTable::addStructType(const std::string &name, SymbolTable* fields) {
     int id = types.size();
-    // El tamaño del struct dependería de la suma de sus campos,
-    // por ahora lo dejamos en 0 o se calcularía iterando la tabla de símbolos.
-    types.push_back({id, TypeKind::STRUCT, "struct " + name, 0, 1, -1, fields});
-    return id;
+    int structSize = 0;
+
+    // Calculamos el tamaño sumando los campos
+    if (fields) {
+        for (const auto& pair : fields->getEntries()) {
+            int fieldTypeId = pair.second.typeId;
+            if (exists(fieldTypeId)) {
+                structSize += get(fieldTypeId).size;
+            }
+        }
+    }
 }
 
 const TypeEntry& TypeTable::get(int id) const {

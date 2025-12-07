@@ -43,6 +43,7 @@ public:
     std::string getName(int id) const;
     SymbolTable* getStructFields(int id) const;
 
+
     // Depuración
     void print() const;
 };
