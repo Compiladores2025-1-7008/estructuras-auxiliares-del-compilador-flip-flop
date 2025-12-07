@@ -3,9 +3,9 @@ name: CI - Pruebas Automáticas
 # Ejecutar en cada push y pull request
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ main, master, develop, pruebas ]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ main, master, develop, pruebas ]
 
 jobs:
   build-and-test:
