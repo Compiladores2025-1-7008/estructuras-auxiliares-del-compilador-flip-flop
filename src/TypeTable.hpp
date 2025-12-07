@@ -35,10 +35,12 @@ public:
 
     // --- Consultas ---
     const TypeEntry& get(int id) const;
+    bool exists(int id) const;
 
     int getSize(int id) const;
     int getNumElements(int id) const;
     int getBaseType(int id) const;
+    std::string getName(int id) const;
     SymbolTable* getStructFields(int id) const;
 
     // Depuración
