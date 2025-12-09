@@ -1,0 +1,47 @@
+name: CI - Pruebas Automáticas
+
+# Ejecutar en cada push y pull request
+on:
+  push:
+    branches: [ main, master, develop, pruebas ]
+  pull_request:
+    branches: [ main, master, develop, pruebas ]
+
+jobs:
+  build-and-test:
+    # Sistema operativo donde se ejecutará 
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Descargar el código del repositorio
+    - name: Checkout código
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    
+    # Instalación de dependencias necesarias
+    - name: Instalar dependencias
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake g++ git
+    
+    # Configuración para GoogleTest 
+    - name: Cache GoogleTest
+      uses: actions/cache@v3
+      with:
+        path: external/googletest
+        key: ${{ runner.os }}-gtest-${{ hashFiles('**/Makefile') }}
+        restore-keys: |
+          ${{ runner.os }}-gtest-
+    
+    # Compilación
+    - name: Compilar proyecto
+      run: make
+    
+    # Ejecución de test
+    - name: Ejecutar pruebas
+      run: make test
+    
+      # Limpiar
+    - name: Limpiar archivos de compilación
+      run: make clean
